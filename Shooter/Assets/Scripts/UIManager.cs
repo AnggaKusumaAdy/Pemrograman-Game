@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class UIManager : MonoBehaviour
     {
         ScoreText.text = "Score: " + score;
         AmmoText.text = WeaponController.ammo + "/" + WeaponController.ammoMag;
+
+        if(score >= 100)
+        {
+            SceneManager.LoadScene("Winner");
+        }
     }
 
     public void ResetScore()

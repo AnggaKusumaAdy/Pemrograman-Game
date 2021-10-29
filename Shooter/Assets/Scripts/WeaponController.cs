@@ -18,6 +18,9 @@ public class WeaponController : MonoBehaviour
     public int ammoStock = 30;
     public static int ammoMag = 90;
     public Slider healthBar;
+    public AudioSource AK47Shot;
+    public AudioSource ShotgunShot;
+    public AudioSource WeaponReload;
     [SerializeField] Camera FPSCamera, TPSCamera;
 
     // Start is called before the first frame update
@@ -39,11 +42,25 @@ public class WeaponController : MonoBehaviour
             if(ammoMag != 0)
             {
                 trigger = false;
+                WeaponReload.Play();
                 StartCoroutine(waitReload());
             }
             else
             {
                 Debug.Log("Peluru Habis");
+            }
+        }
+
+        if (AIEnemyController.GiveDamage == true)
+        {
+            health -= AIEnemyController.EnemyDamage;
+            healthBar.value = health;
+            if (health <= 0)
+            {
+                Debug.Log("Player Mati");
+                SceneManager.LoadScene("Game Over");
+                AIEnemyController.GiveDamage = false;
+                Restart();
             }
         }
     }
@@ -79,6 +96,8 @@ public class WeaponController : MonoBehaviour
     {
         if(ammo != 0)
         {
+            AK47Shot.Play();
+            ShotgunShot.Play();
             RaycastHit hit;
             Ray ray = new Ray(transform.position, transform.forward);
             if(Physics.Raycast(ray, out hit, range))
