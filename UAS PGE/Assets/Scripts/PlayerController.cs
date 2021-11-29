@@ -21,15 +21,20 @@ public class PlayerController : MonoBehaviour
     //public GameObject enemy1;
     //public GameObject enemy2;
     int enemycount = 2;
-    
-
+    AudioSource audio;
+    public AudioClip coin;
+    public AudioClip dead;
+    public AudioClip flags;
+    public AudioClip playerdie;
     
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
+        audio = GetComponent<AudioSource>();
         flag.SetActive(false);
-        
+        slideColl.enabled = false;
+        Data.score = 0;
     }
 
     // Update is called once per frame
@@ -73,10 +78,12 @@ public class PlayerController : MonoBehaviour
             //attackColl.enabled = false;
             //attackColl.enabled = false;
         }
-        if(Data.score == 5 && enemycount == 0)
+        if(Data.score == 10 && enemycount == 0)
         {
            
         flag.SetActive(true);
+            audio.PlayOneShot(flags);
+            audio.volume = 0.2f;
 
         }
         Move();
@@ -115,7 +122,7 @@ public class PlayerController : MonoBehaviour
         {
             Data.score += 1;
             Destroy(collision.gameObject);
-            
+            audio.PlayOneShot(coin);
         }
        
     }
@@ -129,10 +136,14 @@ public class PlayerController : MonoBehaviour
             {
                 Destroy(collision.gameObject);
                 enemycount -= 1;
-            }if(isSlide == false)
+                audio.PlayOneShot(dead);
+
+            }
+            if(isSlide == false)
             {
                 health -= 1;
                 Dead();
+                audio.PlayOneShot(playerdie);
             }
         }
         if (collision.transform.tag.Equals("Flag"))
@@ -153,7 +164,7 @@ public class PlayerController : MonoBehaviour
 
     public void Move()
     {
-        if(idMove==1 && !isDead)
+        if(idMove == 1 && !isDead)
         {
             if (!isJump && !isFall) anim.SetTrigger("run");
             transform.Translate(1 * Time.deltaTime * 4f, 0, 0);
@@ -200,6 +211,9 @@ public class PlayerController : MonoBehaviour
             anim.ResetTrigger("run");
             anim.ResetTrigger("fall");
             anim.SetTrigger("idle");
+            regularColl.enabled = true;
+            slideColl.enabled = false;
+            isSlide = false;
         }
         idMove = 0;
     }
@@ -219,7 +233,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
     IEnumerator Ending()
     {
         yield return new WaitForSeconds(1.3f);

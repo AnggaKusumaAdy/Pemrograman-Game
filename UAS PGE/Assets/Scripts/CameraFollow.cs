@@ -6,6 +6,7 @@ public class CameraFollow : MonoBehaviour
 {
     public Transform player;
     public float verticalOffset;
+    public float horizontalOffset;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,5 +22,7 @@ public class CameraFollow : MonoBehaviour
             newPosition.y = player.position.y + verticalOffset;
             transform.position = newPosition;
         }
+
+       
     }
 }
