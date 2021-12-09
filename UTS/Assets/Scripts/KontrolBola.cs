@@ -128,4 +128,15 @@ public class KontrolBola : MonoBehaviour
         Debug.Log("Nyawa: " + lives);
         livesUI.text = "Lives: " + lives + "";
     }
+
+    void Awake()
+    {
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("lives");
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+        DontDestroyOnLoad(this.gameObject);
+        
+    }
 }
